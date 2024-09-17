@@ -116,7 +116,11 @@ document
     const n = document.getElementById("floors").value;
     const k = document.getElementById("lifts").value;
 
-    generateFloorsAndLifts(n, k);
+    if (n < 1 && k < 1) {
+      alert("Error! Please provide valid inputs.");
+    } else if (n > 0 && k > 0 && n && k) {
+      generateFloorsAndLifts(n, k);
+    }
   });
 
 //=============================
