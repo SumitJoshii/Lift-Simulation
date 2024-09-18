@@ -88,7 +88,7 @@ body {
 .floorContainer {
   border: 5px solid #ffffff;
   border-radius: 10px;
-  max-width: fit-content;
+  width: fit-content;
   margin: auto;
 }
 
@@ -123,10 +123,18 @@ body {
   font-size: 16px;
 }
 
-.up-button:active {
+/* .up-button:active {
   background-color: #58ec14;
 }
 .down-button:active {
+  background-color: #ec4314;
+} */
+
+.up-button.active_button {
+  background-color: #58ec14;
+}
+
+.down-button.active_button {
   background-color: #ec4314;
 }
 

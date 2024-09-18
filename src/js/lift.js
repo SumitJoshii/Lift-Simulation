@@ -231,7 +231,8 @@ document.getElementById("lifts").value = params.lifts;
 // LIFT MOVEMENT LOGIC
 //====================
 const floorHeight = 90; // Example floor height in pixels
-let timeoutId;
+let disabled = false;
+let timeoutDuration = 0;
 function addListeners() {
   // let listenerAdded = false; //LOL
   document.querySelectorAll(".up-button, .down-button").forEach((button) => {
@@ -245,16 +246,21 @@ function addListeners() {
 
       console.log("Button clicked!");
 
-      clearTimeout(timeoutId); // Clear any previous timeout
+      if (!disabled) {
+        moveLiftToFloor(targetFloor);
+        button.disabled = true;
+        button.classList.add("active_button");
+        console.log("disabled");
+      }
 
-      // timeoutId = setTimeout(() => {
-      //   // Code to execute if the button isn't clicked again within 2 seconds
-      //   moveLiftToFloor(targetFloor);
-      //   console.log("Action performed!");
-      // }, 2000);
+      setTimeout(() => {
+        button.disabled = false;
+        button.classList.remove("active_button");
+        console.log("enabled");
+      }, timeoutDuration);
 
       // Call the function to move the lift to the target floor
-      moveLiftToFloor(targetFloor);
+      // moveLiftToFloor(targetFloor);
     });
   });
 }
@@ -293,7 +299,7 @@ async function doorAnimation(lift) {
 }
 
 let selected_lift = -1;
-let timeoutDuration = 0;
+// let timeoutDuration = 0;
 function getAvailableLift(targetFloor) {
   console.log("2- Called");
 
