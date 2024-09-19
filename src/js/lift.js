@@ -1,5 +1,6 @@
 // Initialize lift_information globally
 let lift_information = [];
+let free_lift_counter;
 
 // Function to generate floors and lifts
 function generateFloorsAndLifts(n, k) {
@@ -105,6 +106,7 @@ function getQueryParams() {
 }
 
 const params = getQueryParams();
+free_lift_counter = params.lifts;
 
 // Generate floors and lifts on initial page load
 generateFloorsAndLifts(params.floors, params.lifts);
@@ -115,6 +117,7 @@ document
   .addEventListener("click", function () {
     const n = document.getElementById("floors").value;
     const k = document.getElementById("lifts").value;
+    free_lift_counter = k;
 
     if (n < 1 && k < 1) {
       alert("Error! Please provide valid inputs.");
@@ -244,20 +247,28 @@ function addListeners() {
       const floorElement = this.closest(".floor");
       const targetFloor = parseInt(floorElement.getAttribute("data-floor"));
 
-      console.log("Button clicked!");
+      // console.log("Button clicked!");
 
       if (!disabled) {
-        moveLiftToFloor(targetFloor);
+        // moveLiftToFloor(targetFloor);
+        lift_call_queue.push(targetFloor);
+        if (lift_call_queue.length > 0) {
+          moveLiftToFloor(lift_call_queue); // Call the function every 250 ms if the queue is not empty
+        }
+        console.log("queue :", lift_call_queue);
+        
+        
         button.disabled = true;
         button.classList.add("active_button");
-        console.log("disabled");
+        // console.log("disabled");
       }
+      console.log("timeout ==>>> ", timeoutDuration)
 
       setTimeout(() => {
         button.disabled = false;
         button.classList.remove("active_button");
-        console.log("enabled");
-      }, timeoutDuration);
+        // console.log("enabled");
+      }, timeoutDuration || 3000);//Now this timeout duration will be different.
 
       // Call the function to move the lift to the target floor
       // moveLiftToFloor(targetFloor);
@@ -265,43 +276,64 @@ function addListeners() {
   });
 }
 
+// setInterval(moveLiftToFloor(lift_call_queue), 250);
+
+setInterval(() => {
+  if (lift_call_queue.length > 0) {
+    moveLiftToFloor(lift_call_queue); // Call the function every 250 ms if the queue is not empty
+  }
+}, 250);
+
 let currentFloor = -1;
 let distance = -1;
-async function moveLiftToFloor(targetFloor) {
-  console.log("1- Called");
+async function moveLiftToFloor(lift_call_queue) {
+  if(free_lift_counter > 0){
+    free_lift_counter -= 1;
+    console.log("free lifts:", free_lift_counter);
 
-  // Get the lift that is available or nearest to the floor
-  const lift = getAvailableLift(targetFloor); // Implement this logic to get the nearest available lift
+    // console.log("1- Called")
 
-  // Calculate the lift position based on the floor height
+    targetFloor = lift_call_queue.shift();
+    console.log("target floor :", targetFloor);
+    
+    // Get the lift that is available or nearest to the floor
+    const lift = getAvailableLift(targetFloor); // Implement this logic to get the nearest available lift
 
-  const liftPosition = targetFloor * floorHeight;
+    // Calculate the lift position based on the floor height
 
-  // Move the lift to the calculated position
-  // let currentFloor = lift_information[selected_lift][1];
-  distance = Math.abs((liftPosition - currentFloor) / 90);
-  liftSpeed = 2 * distance;
-  console.log(currentFloor, liftPosition, distance, liftSpeed);
+    const liftPosition = targetFloor * floorHeight;
 
-  lift.style.transform = `translateY(-${liftPosition}px)`; // Negative because top of page is 0
-  lift.style.transition = `transform ${liftSpeed}s ease`; // Optional: add a smooth transition
-  setTimeout(() => {
-    doorAnimation(lift);
-  }, liftSpeed * 1000);
+    // Move the lift to the calculated position
+    // let currentFloor = lift_information[selected_lift][1];
+    distance = Math.abs((liftPosition - currentFloor) / 90);
+    liftSpeed = 2 * distance;
+    // console.log(currentFloor, liftPosition, distance, liftSpeed);
+
+    lift.style.transform = `translateY(-${liftPosition}px)`; // Negative because top of page is 0
+    lift.style.transition = `transform ${liftSpeed}s ease`; // Optional: add a smooth transition
+    setTimeout(() => {
+      doorAnimation(lift);
+    }, liftSpeed * 1000);
+  }
 }
 
 async function doorAnimation(lift) {
   lift.classList.add("door-open");
   setTimeout(() => {
     lift.classList.remove("door-open");
-    console.log("removed!!!!");
+    // console.log("removed!!!!");
+    // setTimeout(() => {
+    //   free_lift_counter += 1;
+    // }, 1000);
+    console.log("free lifts:", free_lift_counter);
+    
   }, 1500);
 }
 
 let selected_lift = -1;
 // let timeoutDuration = 0;
 function getAvailableLift(targetFloor) {
-  console.log("2- Called");
+  console.log("Get Lift Called");
 
   // Placeholder logic to get the nearest available lift
 
@@ -314,7 +346,7 @@ function getAvailableLift(targetFloor) {
   // let selected_lift = -1;
   for (i = 0; i < lift_information.length; i++) {
     if (lift_information[i][2]) {
-      console.log(lift_information[i], "Skipped!");
+      // console.log(lift_information[i], "Skipped!");
 
       continue;
     }
@@ -328,7 +360,7 @@ function getAvailableLift(targetFloor) {
   }
   currentFloor = lift_information[selected_lift][1];
   timeoutDuration = Math.abs(targetFloor - currentFloor / 90) * 2000 + 3000;
-  console.log("timeout: ", timeoutDuration, "- ", targetFloor, currentFloor);
+  // console.log("timeout: ", timeoutDuration, "- ", targetFloor, currentFloor);
 
   updateLiftInformation(selected_lift, call_floor_height); //Why is this being called two times?!
 
@@ -341,12 +373,14 @@ function updateLiftInformation(selected_lift, call_floor_height) {
   liftBusy(selected_lift);
 
   // Object Reference Behavior - JS
-  console.log(JSON.parse(JSON.stringify(lift_information[selected_lift])));
+  console.log("before", JSON.parse(JSON.stringify(lift_information[selected_lift])));
   // setTimeout(liftBusy(selected_lift), 6000); //After removing this line, Two lifts get called!!!
 
   setTimeout(() => {
     liftBusy(selected_lift);
-    console.log(JSON.parse(JSON.stringify(lift_information[selected_lift])));
+    free_lift_counter += 1;
+
+    console.log("after", JSON.parse(JSON.stringify(lift_information[selected_lift])));
   }, timeoutDuration); // Delay in ms
   // timeoutDuration = 0;
 }
