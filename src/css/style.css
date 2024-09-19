@@ -123,19 +123,22 @@ body {
   font-size: 16px;
 }
 
-/* .up-button:active {
-  background-color: #58ec14;
+.up-button:hover {
+  background-color: #93e96b;
 }
-.down-button:active {
-  background-color: #ec4314;
-} */
+.down-button:hover {
+  background-color: #e97c5e;
+} 
 
 .up-button.active_button {
-  background-color: #58ec14;
+  background-color: #50d213;
+  color: white;
+
 }
 
 .down-button.active_button {
-  background-color: #ec4314;
+  background-color: #db3f14;
+  color: white;
 }
 
 #lift-main-div {
