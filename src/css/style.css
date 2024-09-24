@@ -3,9 +3,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
 #main-div {
   width: 40%;
-  height: 50%;
+  height: fit-content;
   border: 4px solid rgb(4, 98, 4);
   border-radius: 20px;
   background-color: #d5f4e6;
@@ -19,6 +20,26 @@ body {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin: auto;
 }
+
+@media (max-width: 450px) {
+  #main-div {
+    width: 96%;
+    height: fit-content;
+    border: 4px solid rgb(4, 98, 4);
+    border-radius: 20px;
+    background-color: #d5f4e6;
+    /* padding: 10px; */
+  
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin: auto;
+  }
+}
+
 
 #heading {
   font-size: 40px;
@@ -37,7 +58,7 @@ body {
   padding: 20px;
   width: 70%;
 
-  position: absolute;
+  /* position: absolute; ----- Not to be used liberally */
   top: 60px;
   bottom: 0;
   left: 0;
@@ -144,7 +165,7 @@ body {
 #lift-main-div {
   background-color: antiquewhite;
   text-align: center;
-  width: fit-content;
+  width: max-content;
   margin: auto;
   margin-bottom: 10px;
   border-radius: 10px;
@@ -171,6 +192,40 @@ body {
 }
 #lift-inputs button {
   margin: auto 5%;
+}
+
+@media (max-width: 450px) {
+  #lift-main-div {
+    background-color: rgb(250, 184, 97);
+    text-align: center;
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  #lift-main-div p {
+    padding: 10px;
+    margin: 0;
+    font-size: large;
+  }
+  
+  #lift-inputs {
+    display: flex;
+    padding: 5px;
+  }
+  #lift-inputs input {
+    height: 20px;
+    width: 42px;
+    margin-left: 10px;
+  }
+  #lift-inputs label {
+    margin-left: 10px;
+  }
+  #lift-inputs button {
+    margin: auto 5%;
+  }
+  
 }
 
 .liftContainer {
