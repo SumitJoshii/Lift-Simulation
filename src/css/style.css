@@ -214,16 +214,13 @@ body {
     display: flex;
     padding: 8px;
   }
-  label{
-    display: none;
-  }
   #lift-inputs input {
     height: 20px;
     width: 42px;
     margin-left: 2px;
   }
   #lift-inputs label {
-    margin-left: 10px;
+    margin-left: 0px;
   }
   #lift-inputs button {
     margin-left: 10px;
