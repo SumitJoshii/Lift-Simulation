@@ -310,7 +310,7 @@ async function moveLiftToFloor(lift_call_queue) {
     // console.log(currentFloor, liftPosition, distance, liftSpeed);
 
     lift.style.transform = `translateY(-${liftPosition}px)`; // Negative because top of page is 0
-    lift.style.transition = `transform ${liftSpeed}s ease`; // Optional: add a smooth transition
+    lift.style.transition = `transform ${liftSpeed}s linear`; // Optional: add a smooth transition
     setTimeout(() => {
       doorAnimation(lift);
     }, liftSpeed * 1000);
